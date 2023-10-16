@@ -2,8 +2,8 @@ general_data = input('Введіть дані людини відповідно 
 
 name_data, birth_data, death_data = general_data.split('*')
 
-birth_data_list= birth_data.split('-')
-birth_year = int(birth_data_list[0])
+birth_data_list = birth_data.split('-')
+birth_year = int(birth_data.split('-')[0])
 
 death_data_list = death_data.split('-')
 death_year = int(death_data_list[0])
