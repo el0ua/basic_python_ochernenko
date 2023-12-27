@@ -9,7 +9,7 @@ def copydeep(obj):
     elif isinstance(obj, tuple):
         copy_tuple = ()
         for i in obj:
-            copy_tuple += copy_tuple(i)
+            copy_tuple += copydeep(i)
         return copy_tuple
 
 def main():
