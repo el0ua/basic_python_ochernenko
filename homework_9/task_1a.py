@@ -1,0 +1,19 @@
+import random
+
+
+def diff_min_max(num_limit, lower_bound, upper_bound):
+    random_numbers = [random.randint(lower_bound, upper_bound) for _ in range(num_limit)]
+    return max(random_numbers) - min(random_numbers)
+
+
+def main():
+    num_limit = int(input('Введіть кількість випадкових чисел: '))
+    lower_bound = int(input('Введіть нижню границю діапазону: '))
+    upper_bound = int(input('Введіть верхню границю діапазону: '))
+
+    result = diff_min_max(num_limit, lower_bound, upper_bound)
+    print(f'Різниця між максимальним та мінімальним значенням: {result}')
+
+
+if __name__ == '__main__':
+    main()
