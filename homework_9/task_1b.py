@@ -4,7 +4,7 @@ import random
 def diff_min_max(num_limit, lower_bound, upper_bound):
     random_numbers = [random.randint(lower_bound, upper_bound) for _ in range(num_limit)]
     random_numbers.sort()
-    return random_numbers[num_limit - 1] - random_numbers[0]
+    return random_numbers[- 1] - random_numbers[0]
 
 
 def main():

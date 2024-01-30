@@ -7,10 +7,10 @@ def copydeep(obj):
             copy_list.append(copydeep(i))
         return copy_list
     elif isinstance(obj, tuple):
-        copy_tuple = ()
+        copy_tuple = []
         for i in obj:
-            copy_tuple += copydeep(i)
-        return copy_tuple
+            copy_tuple.append(copydeep(i))
+        return tuple(copy_tuple)
     elif isinstance(obj, dict):
         copy_dict = {}
         for key, value in obj.items():

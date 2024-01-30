@@ -4,13 +4,13 @@ def group_by_surname(list_of_enrollees):
     for full_name in list_of_enrollees:
         surname_first_letter = full_name.split()[-1][0].upper()
 
-        if 'A' <= surname_first_letter <= 'I':
+        if surname_first_letter <= 'I':
             enrollees_number['A-I'] += 1
-        elif 'J' <= surname_first_letter <= 'P':
+        elif surname_first_letter <= 'P':
             enrollees_number['J-P'] += 1
-        elif 'Q' <= surname_first_letter <= 'T':
+        elif surname_first_letter <= 'T':
             enrollees_number['Q-T'] += 1
-        elif 'U' <= surname_first_letter <= 'Z':
+        elif surname_first_letter <= 'Z':
             enrollees_number['U-Z'] += 1
 
     return enrollees_number
