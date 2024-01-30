@@ -1,11 +1,9 @@
-def sort_by_number_value(list):
-    sorted_list = sorted(list, key=lambda n: float(n))
-    return sorted_list
+def sort_by_number_value(lst):
+    return sorted(lst, key=lambda n: float(n))
 
 
-def sort_by_first_digit(list):
-    sorted_list = sorted(list, key=lambda n: str(n)[0])
-    return sorted_list
+def sort_by_first_digit(lst):
+    return sorted(lst, key=lambda n: str(n)[0])
 
 
 def main():

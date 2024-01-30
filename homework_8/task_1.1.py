@@ -1,7 +1,8 @@
 def index(lst, elem):
-    for i in range(len(lst)):
-        if lst[i] == elem:
+    for i, value in enumerate(lst):
+        if value == elem:
             return i
+    return None
 
 
 def main():

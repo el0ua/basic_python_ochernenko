@@ -1,10 +1,13 @@
 def gen_primes():
-    primes_list = list()
-    for i in range(2, 101):
-        for n in range(2, i):
+    primes_list = [2]
+    for i in range(3, 101, 2):
+        is_prime = True
+        for n in range(3, int(i**0.5) + 1, 2):
             if i % n == 0:
+                is_prime = False
                 break
-        else:
+
+        if is_prime:
             primes_list.append(i)
     return primes_list
 
