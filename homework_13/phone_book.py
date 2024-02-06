@@ -1,33 +1,37 @@
 import json
-from copy import deepcopy
 
 running = True
+changes = False
+file_name = 'phonebook.json'
 
 #------------------------------------------------------------------------------
 # Never use real phone/fax numbers for tests. Use 555 numbers: 
 # https://en.wikipedia.org/wiki/555_(telephone_number)
 phone_book = [
-{"name": "Nazar", "surname": "Nazarenko", "age": 50, "phone_number":"+18005550102"},
-{"name": "Mariia", "surname": "Mariychuk", "age": 15, "phone_number":"+18505550112"},
+{"name": "Nazar", "surname": "Nazarenko", "age": 50, "phone_number":"+18005550102", "email":"1@gmail.com"},
+{"name": "Mariia", "surname": "Mariychuk", "age": 15, "phone_number":"+18505550112", "email":"2@gmail.com"},
+{"name": "Mariia2", "surname": "Mariychuk2", "age": 20, "phone_number":"+18505550112", "email":"3@gmail.com"},
+{"name": "Mariia3", "surname": "Mariychuk3", "age": 31, "phone_number":"+18505550112", "email":"4@gmail.com"},
+{"name": "Mariia4", "surname": "Mariychuk4", "age": 20, "phone_number":"+18505550112", "email":"5@gmail.com"},
 ]
 
 
 #------------------------------------------------------------------------------
 def print_entry(number, entry):
-    print ("--[ %s ]--------------------------" % number)
-    print ("| Surname: %20s |" % entry["surname"])
-    print ("| Name:    %20s |" % entry["name"])
-    print ("| Age:     %20s |" % entry["age"])
-    print ("| Phone:   %20s |" % entry["phone_number"])
-    print ()
+    print("--[ %s ]--------------------------" % number)
+    print("| Surname: %20s |" % entry["surname"])
+    print("| Name:    %20s |" % entry["name"])
+    print("| Age:     %20s |" % entry["age"])
+    print("| Phone:   %20s |" % entry["phone_number"])
+    print("| Email:   %20s |" % entry["email"])
 
 
 #------------------------------------------------------------------------------
 def print_phonebook():
-    print ()
-    print ()
-    print ("#########  Phone book  ##########")
-    print ()
+    print()
+    print()
+    print("#########  Phone book  ##########")
+    print()
 
     number = 1
     for entry in phone_book:
@@ -37,10 +41,11 @@ def print_phonebook():
 
 #------------------------------------------------------------------------------
 def add_entry_phonebook():
+    global changes
     surname = input("    Enter surname: ")
-    name    = input("    Enter name: ")
-    age     = int(input("    Enter age: "))
-    phone_number   = input("    Enter phone num.: ")
+    name = input("    Enter name: ")
+    age = int(input("    Enter age: "))
+    phone_number = input("    Enter phone num.: ")
 
     entry = {}
     entry["surname"] = surname
@@ -48,62 +53,88 @@ def add_entry_phonebook():
     entry["age"] = age
     entry["phone_number"] = phone_number
     phone_book.append(entry)
+    changes = True
 
 
 #------------------------------------------------------------------------------
-def printError(message):
-    print ("ERROR: %s" % message)
+def print_error(message):
+    print("ERROR: %s" % message)
 
 
 #------------------------------------------------------------------------------
-def printInfo(message):
-    print ("INFO: %s" % message)
+def print_info(message):
+    print("INFO: %s" % message)
 
 
 #------------------------------------------------------------------------------
 def find_entry_name_phonebook():
-    name = str(input("    Enter name: "))
+    name = input("Enter name: ")
     idx = 1
     found = False
+
     for entry in phone_book:
         if entry["name"] == name:
             print_entry(idx, entry)
             idx += 1
             found = True
+
     if not found:
-        printError("Not found!!")
+        print_error("Not found!")
 
 
 #------------------------------------------------------------------------------
 def find_entry_age_phonebook():
-    age = int(input("    Enter age: "))
+    age = int(input("Enter age: "))
     idx = 1
     found = False
+
     for entry in phone_book:
         if entry["age"] == age:
             print_entry(idx, entry)
             idx += 1
             found = True
+
     if not found:
-        printError("Not found!!")
+        print_error("Not found!")
+
+
+#------------------------------------------------------------------------------
+def find_entry_email_phonebook():
+    email = input("Enter email: ")
+    idx = 1
+    found = False
+
+    for entry in phone_book:
+        if entry["email"] == email:
+            print_entry(idx, entry)
+            idx += 1
+            found = True
+
+    if not found:
+        print_error("Not found!")
 
 
 #------------------------------------------------------------------------------
 def delete_entry_name_phonebook():
-    name = str(input("    Enter name to delete: "))
+    global changes
+
+    name = input("Enter name to delete: ")
     phone_book_copy = phone_book.copy()
     found = False
 
     for entry in phone_book_copy:
-        if entry.get("name") == name:
-            phone_book.remove(entry)
+        if entry["name"] == name:
+            phone_book.pop(phone_book.index(entry))
             found = True
+            changes = True
+
     if not found:
-        printError("Not found!!")
+        print_error("Not found!")
+
 
 #------------------------------------------------------------------------------
 def count_all_entries_in_phonebook():
-    print ("Total number of entries: ", len(phone_book))
+    print("Total number of entries: ", len(phone_book))
 
 
 #------------------------------------------------------------------------------
@@ -114,12 +145,17 @@ def print_phonebook_by_age():
         print_entry(idx, entry)
         idx += 1
 
+
 #------------------------------------------------------------------------------
 def increase_age():
+    global changes
+
     years_to_add = int(input("Enter the number to increase the age: "))
 
     for entry in phone_book:
         entry['age'] += years_to_add
+
+    changes = True
 
 #------------------------------------------------------------------------------
 def avr_age_of_all_persons():
@@ -129,20 +165,64 @@ def avr_age_of_all_persons():
 
 
 #------------------------------------------------------------------------------
-def save_to_file(file_name, phone_book):
-    with open(file_name, "w") as file:
-        json.dump(phone_book, file)
+def change_email_by_name():
+    global changes
+
+    name = input("Enter name: ")
+    phone_book_copy = phone_book.copy()
+    found = False
+
+    for entry in phone_book_copy:
+        if entry["name"] == name:
+            new_email = input("Enter email: ")
+            entry["email"] = new_email
+            changes = True
+            found = True
+
+    if not found:
+        print_error("Not found!")
+
 
 #------------------------------------------------------------------------------
-def load_from_file(file_name):
-    with open(file_name, "r") as file:
-        phone_book = json.load(file)
-        return phone_book
+def save_to_file():
+    global phone_book, file_name
+
+    user_response = input("File will be overwritten. Continue? (y/n): ")
+
+    if user_response == 'y':
+        with open(file_name, "w") as file:
+            json.dump(phone_book, file)
+            print("Phone book saved")
+    else:
+        print("Phone book not saved")
+
 
 #------------------------------------------------------------------------------
-def exit():
-      global running
-      running = False
+def load_from_file():
+    global changes, file_name, phone_book
+
+    if changes:
+        user_response = input("File will be overwritten. Continue? (y/n): ")
+
+        if user_response == 'y':
+            save_to_file()
+    else:
+        with open(file_name, "r") as file:
+            phone_book = json.load(file)
+            return phone_book
+
+
+#------------------------------------------------------------------------------
+def exit_phonebook():
+    global running, changes
+
+    if changes is True:
+        user_response = input("File will be overwritten. Continue? (y/n): ")
+
+        if user_response == 'y':
+            save_to_file()
+
+    running = False
 
 
 #------------------------------------------------------------------------------
@@ -157,10 +237,12 @@ def print_prompt():
       print("     3 - Add new entry")
       print("     4 - Find entry by name")
       print("     5 - Find entry by age")
+      print("     5e - Find entry by email")
       print("     6 - Delete entry by name")
       print("     7 - The number of entries in the phonebook")
       print("     8 - Avr. age of all persons")
       print("     9 - Increase age by num. of years")
+      print("     9e - Change_email_by_name")
       print("-----------------------------")
       print("     s - Save to file")
       print("     l - Load from file")
@@ -179,12 +261,14 @@ def main():
                   '3':  add_entry_phonebook,
                   '4':  find_entry_name_phonebook,
                   '5':  find_entry_age_phonebook,
+                  '5e': find_entry_email_phonebook,
                   '6':  delete_entry_name_phonebook,
                   '7':  count_all_entries_in_phonebook,
                   '8':  avr_age_of_all_persons,
                   '9':  increase_age,
+                  '9e': change_email_by_name,
 
-                  '0':  exit,
+                  '0':  exit_phonebook,
                   's':  save_to_file,
                   'l':  load_from_file,
             }
@@ -194,7 +278,7 @@ def main():
             menu[user_input]()
 
         except Exception as ex:
-            printError("Something went wrong. Try again...")
+            print_error("Something went wrong. Try again...")
 
 
 #------------------------------------------------------------------------------
