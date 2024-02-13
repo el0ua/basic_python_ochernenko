@@ -1,8 +1,10 @@
 import json
+import tkinter as tk
+from tkinter import filedialog
 
 running = True
 changes = False
-file_name = 'phonebook.json'
+file_name = ['phonebook.json']
 
 #------------------------------------------------------------------------------
 # Never use real phone/fax numbers for tests. Use 555 numbers: 
@@ -42,10 +44,10 @@ def print_phonebook():
 #------------------------------------------------------------------------------
 def add_entry_phonebook():
     global changes
-    surname = input("    Enter surname: ")
-    name = input("    Enter name: ")
-    age = int(input("    Enter age: "))
-    phone_number = input("    Enter phone num.: ")
+    surname = input("Enter surname: ")
+    name = input("Enter name: ")
+    age = int(input("Enter age: "))
+    phone_number = input("Enter phone num.: ")
 
     entry = {}
     entry["surname"] = surname
@@ -185,42 +187,85 @@ def change_email_by_name():
 
 #------------------------------------------------------------------------------
 def save_to_file():
-    global phone_book, file_name
+    global file_name
 
-    user_response = input("File will be overwritten. Continue? (y/n): ")
+    user_response = input(
+        "Do you want to save to a new file or an existing one? (n/ex): "
+    )
 
-    if user_response == 'y':
-        with open(file_name, "w") as file:
-            json.dump(phone_book, file)
-            print("Phone book saved")
+    if user_response == 'n':
+        window = tk.Tk()
+        window.withdraw()
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".json", filetypes=[("JSON files", "*.json")]
+        )
+
+        if file_path:
+            with open(file_path, "w") as file:
+                json.dump(phone_book, file)
+                print("Phone book saved to new file")
+            file_name.append(file_path)
+        else:
+            print("Phone book not saved")
+
+    elif user_response == 'ex':
+
+        window = tk.Tk()
+        window.withdraw()
+
+        file_path = filedialog.askopenfilename(
+            filetypes=[("JSON files", "*.json")]
+        )
+
+        if file_path:
+            user_response = input("File will be overwritten. Continue? (y/n): ")
+
+            if user_response == 'y':
+                with open(file_path, "w") as file:
+                    json.dump(phone_book, file)
+                    print(f"Phone book saved to existing file: {file_path}")
+            else:
+                print("Phone book not saved")
+        else:
+            print("Phone book not saved")
     else:
-        print("Phone book not saved")
+        print("Invalid option")
 
 
 #------------------------------------------------------------------------------
 def load_from_file():
-    global changes, file_name, phone_book
+    global phone_book
 
     if changes:
-        user_response = input("File will be overwritten. Continue? (y/n): ")
+        user_response = input("Would you like to save changes? (y/n): ")
 
         if user_response == 'y':
             save_to_file()
-    else:
-        with open(file_name, "r") as file:
+
+    window = tk.Tk()
+    window.withdraw()
+
+    file_path = filedialog.askopenfilename(
+        filetypes=[("JSON files", "*.json")]
+    )
+
+    if file_path:
+        with open(file_path, "r") as file:
             phone_book = json.load(file)
+            print("Data loaded from file:", phone_book)
             return phone_book
+
+    else:
+        print("File has not been selected")
 
 
 #------------------------------------------------------------------------------
 def exit_phonebook():
-    global running, changes
+    global running
 
-    if changes is True:
-        user_response = input("File will be overwritten. Continue? (y/n): ")
-
-        if user_response == 'y':
-            save_to_file()
+    if changes:
+        save_to_file()
 
     running = False
 
